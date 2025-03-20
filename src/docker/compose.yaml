@@ -2,7 +2,8 @@ name: sb-debezium-demo
 services:
   access-svc:
     depends_on:
-      - database
+      database:
+        condition: service_healthy
     build:
       context: ../..
       dockerfile: ./src/docker/Dockerfile
@@ -17,8 +18,8 @@ services:
 
   access-monitor:
     depends_on:
-      - database
-      - access-svc
+      database:
+        condition: service_healthy
     build:
       context: ../..
       dockerfile: ./src/docker/Dockerfile
@@ -39,10 +40,11 @@ services:
     ports:
         - "5432:5432"
     healthcheck:
-      test: [ "CMD-SHELL", "pg_isready", "-d", "sb_access" ]
-      interval: 30s
+      test: [ "CMD", "pg_isready", "-d", "sb_access" ]
+      interval: 10s
       timeout: 60s
       retries: 5
+      start_interval: 20s
     environment:
         POSTGRES_DB: sb_access
         POSTGRES_USER: root
