@@ -1,0 +1,25 @@
+monitor:
+  discord:
+    webhook: placeholder
+logging:
+    level:
+      io.debezium: "info"
+debezium:
+    properties:
+        name: access_monitor_engine
+        connector.class: io.debezium.connector.postgresql.PostgresConnector
+        topic.prefix: access
+        database.hostname: localhost
+        database.port: 5432
+        database.user: root
+        database.password: root
+        database.dbname: sb_access
+        table.include.list: public\.access
+        offset.storage: org.apache.kafka.connect.storage.MemoryOffsetBackingStore
+        plugin.name: pgoutput
+server:
+    port: 8081
+spring:
+    application:
+      name: debezium-spring-boot-demo
+
